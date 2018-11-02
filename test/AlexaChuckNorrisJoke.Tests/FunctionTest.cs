@@ -1,28 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+using Alexa.NET.Request;
 using Xunit;
-using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
-
-using AlexaChuckNorrisJoke;
+using System;
+using Alexa.NET.Response;
 
 namespace AlexaChuckNorrisJoke.Tests
 {
     public class FunctionTest
     {
         [Fact]
-        public void TestToUpperFunction()
+        public void TestBasicJokeRequest()
         {
 
             // Invoke the lambda function and confirm the string was upper cased.
             var function = new Function();
             var context = new TestLambdaContext();
-            var upperCase = function.FunctionHandler("hello world", context);
+            var request = new SkillRequest();
+            SkillResponse response = null;
+            try
+            {
+                response = function.RandomJoke(request, context);
+            }
+            catch(Exception e)
+            {
+                Assert.Null(e);
+            }
 
-            Assert.Equal("HELLO WORLD", upperCase);
+            Assert.NotNull(response.Response.OutputSpeech.ToString());
         }
     }
 }
